@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>리저버 체적 계산기</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <main class="calculator-container">
+
+        <header class="page-header">
+            <h1>리저버 체적 계산기</h1>
+            <p>
+                시스템 유로 체적과 쿨런트 밀도를 기준으로
+                필요 쿨런트량 및 리저버 체적을 계산합니다.
+            </p>
+        </header>
+
+        <section class="calculator-card">
+            <h2>입력값</h2>
+
+            <div class="input-grid">
+
+                <div class="input-group">
+                    <label for="coolantDensity">
+                        쿨런트 밀도
+                        <span class="unit">(kg/m³)</span>
+                    </label>
+
+                    <input
+                        type="number"
+                        id="coolantDensity"
+                        min="0"
+                        step="any"
+                        autocomplete="off"
+                    >
+                </div>
+
+                <div class="input-group">
+                    <label for="managementLevelVolume">
+                        관리 수위
+                        <span class="unit">(L)</span>
+                    </label>
+
+                    <input
+                        type="number"
+                        id="managementLevelVolume"
+                        min="0"
+                        step="any"
+                        autocomplete="off"
+                    >
+                </div>
+
+                <div class="input-group">
+                    <label for="heaterBoxVolume">
+                        Heater Box 유로 체적
+                        <span class="unit">(L)</span>
+                    </label>
+
+                    <input
+                        type="number"
+                        id="heaterBoxVolume"
+                        min="0"
+                        step="any"
+                        autocomplete="off"
+                    >
+                </div>
+
+                <div class="input-group">
+                    <label for="chillerVolume">
+                        칠러 내부 유로 체적
+                        <span class="unit">(L)</span>
+                    </label>
+
+                    <input
+                        type="number"
+                        id="chillerVolume"
+                        min="0"
+                        step="any"
+                        autocomplete="off"
+                    >
+                </div>
+
+                <div class="input-group">
+                    <label for="customerEquipmentVolume">
+                        고객사 장비 내부 유로 체적
+                        <span class="unit">(L)</span>
+                    </label>
+
+                    <input
+                        type="number"
+                        id="customerEquipmentVolume"
+                        min="0"
+                        step="any"
+                        autocomplete="off"
+                    >
+                </div>
+
+                <div class="input-group">
+                    <label for="tubeType">
+                        셋업 배관 종류
+                    </label>
+
+                    <select id="tubeType">
+                        <option value="" selected disabled>
+                            배관 종류 선택
+                        </option>
+
+                        <option value="A">
+                            SUS Flexible Tube (A Type)
+                        </option>
+
+                        <option value="B">
+                            SUS Flexible Tube (B Type)
+                        </option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label for="tubeSize">
+                        셋업 배관 관경
+                    </label>
+
+                    <select id="tubeSize" disabled>
+                        <option value="" selected disabled>
+                            배관 종류를 먼저 선택
+                        </option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label for="tubeLength">
+                        셋업 배관 길이
+                        <span class="unit">(m)</span>
+                    </label>
+
+                    <input
+                        type="number"
+                        id="tubeLength"
+                        min="0"
+                        step="any"
+                        autocomplete="off"
+                    >
+
+                    <p class="input-note">
+                        공급 및 회수 배관을 포함한 전체 길이를 입력하세요.
+                    </p>
+                </div>
+
+            </div>
+
+            <p id="errorMessage" class="error-message"></p>
+
+            <div class="button-group">
+                <button type="button" id="calculateButton">
+                    계산하기
+                </button>
+
+                <button type="button" id="resetButton" class="secondary-button">
+                    초기화
+                </button>
+            </div>
+        </section>
+
+        <section class="calculator-card result-section">
+            <h2>계산 결과</h2>
+
+            <div class="result-grid">
+
+                <div class="result-item">
+                    <span class="result-label">
+                        셋업 배관 1 m당 내부 체적
+                    </span>
+
+                    <strong>
+                        <span id="tubeVolumePerMeter">-</span>
+                        <span class="result-unit">L/m</span>
+                    </strong>
+                </div>
+
+                <div class="result-item">
+                    <span class="result-label">
+                        셋업 배관 내부 체적
+                    </span>
+
+                    <strong>
+                        <span id="setupTubeVolume">-</span>
+                        <span class="result-unit">L</span>
+                    </strong>
+                </div>
+
+                <div class="result-item">
+                    <span class="result-label">
+                        관리 수위 쿨런트량
+                    </span>
+
+                    <strong>
+                        <span id="managementLevelMass">-</span>
+                        <span class="result-unit">kg</span>
+                    </strong>
+                </div>
+
+                <div class="result-item">
+                    <span class="result-label">
+                        Heater Box 유로 쿨런트량
+                    </span>
+
+                    <strong>
+                        <span id="heaterBoxMass">-</span>
+                        <span class="result-unit">kg</span>
+                    </strong>
+                </div>
+
+                <div class="result-item">
+                    <span class="result-label">
+                        칠러 내부 유로 쿨런트량
+                    </span>
+
+                    <strong>
+                        <span id="chillerMass">-</span>
+                        <span class="result-unit">kg</span>
+                    </strong>
+                </div>
+
+                <div class="result-item">
+                    <span class="result-label">
+                        고객사 장비 내부 쿨런트량
+                    </span>
+
+                    <strong>
+                        <span id="customerEquipmentMass">-</span>
+                        <span class="result-unit">kg</span>
+                    </strong>
+                </div>
+
+                <div class="result-item">
+                    <span class="result-label">
+                        셋업 배관 내부 쿨런트량
+                    </span>
+
+                    <strong>
+                        <span id="setupTubeMass">-</span>
+                        <span class="result-unit">kg</span>
+                    </strong>
+                </div>
+
+                <div class="result-item total-result">
+                    <span class="result-label">
+                        총 필요 쿨런트량
+                    </span>
+
+                    <strong>
+                        <span id="totalCoolantMass">-</span>
+                        <span class="result-unit">kg</span>
+                    </strong>
+                </div>
+
+                <div class="result-item reservoir-result">
+                    <span class="result-label">
+                        필요 리저버 체적
+                    </span>
+
+                    <strong>
+                        <span id="requiredReservoirVolume">-</span>
+                        <span class="result-unit">L</span>
+                    </strong>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
